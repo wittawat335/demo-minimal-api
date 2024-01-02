@@ -31,3 +31,4 @@ E:\GitHub\.Net Project\.Net 8\WebApi\Demos\minimalApi\minimalApi\obj\Debug\net8.
 E:\GitHub\.Net Project\.Net 8\WebApi\Demos\minimalApi\minimalApi\obj\Debug\net8.0\minimalApi.pdb
 E:\GitHub\.Net Project\.Net 8\WebApi\Demos\minimalApi\minimalApi\obj\Debug\net8.0\minimalApi.genruntimeconfig.cache
 E:\GitHub\.Net Project\.Net 8\WebApi\Demos\minimalApi\minimalApi\obj\Debug\net8.0\ref\minimalApi.dll
+E:\GitHub\.Net Project\.Net 8\WebApi\Demos\minimalApi\minimalApi\obj\Debug\net8.0\minimalApi.sourcelink.json
