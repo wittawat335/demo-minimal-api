@@ -6,10 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<MinimalApiDemoContext>(opt =>
-{
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
-});
+builder.Services.AddDbContext<MinimalApiDemoContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
 var app = builder.Build();
 
@@ -108,6 +105,7 @@ app.MapDelete("/Agents/{code}", async (MinimalApiDemoContext context, string cod
 
     return Results.Ok(await context.Agents.ToListAsync());
 });
+
 # endregion
 
 app.Run();
