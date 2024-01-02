@@ -1,7 +1,15 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.EntityFrameworkCore;
+using minimalApi.DBContexts;
+using minimalApi.Entities;
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<MinimalApiDemoContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"));
+});
 
 var app = builder.Build();
 
@@ -12,6 +20,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+# region sample no DB
 
 var model = new List<Bank>
 {
@@ -60,9 +70,49 @@ app.MapDelete("/bank/{id}", (int id) =>
     return Results.Ok(data);
 });
 
+# endregion
+
+# region use Db,EF Core
+
+app.MapGet("/Agents", async (MinimalApiDemoContext context) => await context.Agents.ToListAsync());
+
+app.MapGet("/Agents{code}", async (MinimalApiDemoContext context, string code) =>
+    await context.Agents.FindAsync(code) is Agent agent ? Results.Ok(agent) : Results.NotFound("ไม่เจอข้อมูล"));
+
+app.MapPost("/Agents", async (MinimalApiDemoContext context, Agent request) =>
+{
+    context.Agents.Add(request);
+    await context.SaveChangesAsync();
+
+    return Results.Ok(await context.Agents.ToListAsync());
+});
+
+app.MapPut("/Agents/{code}", async (MinimalApiDemoContext context, Agent request, string code) =>
+{
+    var data = await context.Agents.FindAsync(code);
+    if (data == null) return Results.NotFound("ไม่มีข้อมูล");
+
+    data.AgentName = request.AgentName;
+    await context.SaveChangesAsync();
+
+    return Results.Ok(await context.Agents.ToListAsync());
+});
+
+app.MapDelete("/Agents/{code}", async (MinimalApiDemoContext context, string code) =>
+{
+    var data = await context.Agents.FindAsync(code);
+    if (data == null) return Results.NotFound("ไม่มีข้อมูล");
+
+    context.Remove(data);
+    await context.SaveChangesAsync();
+
+    return Results.Ok(await context.Agents.ToListAsync());
+});
+# endregion
+
 app.Run();
 
-class Bank
+public class Bank
 {
     public int Id { get; set; }
     public required string NameTH { get; set; }
