@@ -9,7 +9,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MinimalApiDemoContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
 var app = builder.Build();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -27,12 +26,12 @@ var model = new List<Bank>
     new Bank {Id = 3, NameTH ="ไทยพาณิชย์", NameEN="SCB"},
 };
 
-app.MapGet("/bank", () =>
+app.MapGet("/api/bank", () =>
 {
     return model;
 });
 
-app.MapGet("/bank{id}", (int id) =>
+app.MapGet("/api/bank{id}", (int id) =>
 {
     var response = model.Find(x => x.Id == id);
     if (response == null) return Results.NotFound("ไม่มีข้อมูล");
@@ -40,13 +39,13 @@ app.MapGet("/bank{id}", (int id) =>
     return Results.Ok(response);
 });
 
-app.MapPost("/bank", (Bank request) =>
+app.MapPost("/api/bank", (Bank request) =>
 {
     model.Add(request);
     return model;
 });
 
-app.MapPut("/bank/{id}", (Bank request,int id) =>
+app.MapPut("/api/bank/{id}", (Bank request,int id) =>
 {
     var data = model.Find(x => x.Id == id);
     if(data == null) return Results.NotFound("ไม่มีข้อมูล");
@@ -57,7 +56,7 @@ app.MapPut("/bank/{id}", (Bank request,int id) =>
     return Results.Ok(data);
 });
 
-app.MapDelete("/bank/{id}", (int id) =>
+app.MapDelete("/api/bank/{id}", (int id) =>
 {
     var data = model.Find(x => x.Id == id);
     if (data == null) return Results.NotFound("ไม่มีข้อมูล");
@@ -71,12 +70,12 @@ app.MapDelete("/bank/{id}", (int id) =>
 
 # region use Db,EF Core
 
-app.MapGet("/Agents", async (MinimalApiDemoContext context) => await context.Agents.ToListAsync());
+app.MapGet("/api/Agents", async (MinimalApiDemoContext context) => await context.Agents.ToListAsync());
 
-app.MapGet("/Agents{code}", async (MinimalApiDemoContext context, string code) =>
+app.MapGet("/api/Agents{code}", async (MinimalApiDemoContext context, string code) =>
     await context.Agents.FindAsync(code) is Agent agent ? Results.Ok(agent) : Results.NotFound("ไม่เจอข้อมูล"));
 
-app.MapPost("/Agents", async (MinimalApiDemoContext context, Agent request) =>
+app.MapPost("/api/Agents", async (MinimalApiDemoContext context, Agent request) =>
 {
     context.Agents.Add(request);
     await context.SaveChangesAsync();
@@ -84,7 +83,7 @@ app.MapPost("/Agents", async (MinimalApiDemoContext context, Agent request) =>
     return Results.Ok(await context.Agents.ToListAsync());
 });
 
-app.MapPut("/Agents/{code}", async (MinimalApiDemoContext context, Agent request, string code) =>
+app.MapPut("/api/Agents/{code}", async (MinimalApiDemoContext context, Agent request, string code) =>
 {
     var data = await context.Agents.FindAsync(code);
     if (data == null) return Results.NotFound("ไม่มีข้อมูล");
@@ -95,7 +94,7 @@ app.MapPut("/Agents/{code}", async (MinimalApiDemoContext context, Agent request
     return Results.Ok(await context.Agents.ToListAsync());
 });
 
-app.MapDelete("/Agents/{code}", async (MinimalApiDemoContext context, string code) =>
+app.MapDelete("/api/Agents/{code}", async (MinimalApiDemoContext context, string code) =>
 {
     var data = await context.Agents.FindAsync(code);
     if (data == null) return Results.NotFound("ไม่มีข้อมูล");
