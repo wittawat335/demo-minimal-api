@@ -70,7 +70,7 @@ app.MapDelete("/api/bank/{id}", (int id) =>
 
 # region use Db,EF Core
 
-app.MapGet("/api/Agents", async (MinimalApiDemoContext context) => await context.Agents.ToListAsync());
+app.MapGet("/api/Agents", async (MinimalApiDemoContext context) => await context.Agents.ToListAsync()); //
 
 app.MapGet("/api/Agents{code}", async (MinimalApiDemoContext context, string code) =>
     await context.Agents.FindAsync(code) is Agent agent ? Results.Ok(agent) : Results.NotFound("ไม่เจอข้อมูล"));
